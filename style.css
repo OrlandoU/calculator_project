@@ -1,0 +1,105 @@
+* {
+    user-select: none;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+}
+h1 {
+    text-shadow: 1px 1px 8px rgb(114, 114, 114);
+    font-size: 100px;
+    width: min-content;
+    color: rgb(255, 255, 255);
+}
+
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+}
+.main-container> div{
+    min-width: 700px;
+    flex: auto;
+}
+.left-side-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 15px 1px rgb(187, 238, 238);
+    background: linear-gradient(180deg,white,aquamarine, aqua);
+    background-size: 100% 100%;
+    color: black;
+
+}
+
+.right-side-container:hover{
+    box-shadow: 10px 10px 10px rgb(122, 122, 122);
+}
+.right-side-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.calculator {
+    background-color: rgb(32, 32, 32);
+    width: fit-content;
+    border-radius: 10px;
+    box-shadow: 4px 2px 8px 2px;
+    margin: 20px;
+}
+.terminal-container {
+    padding: 20px;
+}
+.terminal{
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 50px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    background-color: antiquewhite;
+    height: 70px;
+
+}
+.flex-container {
+    display: flex;
+    gap: 8px;
+    padding: 10px 20px;
+}
+.last {
+    padding: 10px 20px 20px 20px;
+}
+.button {
+    transition: all .1s;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(136, 136, 136);
+    padding: 4px;
+    width: 100px ;
+    text-align: center;
+}
+#clear {
+    background-color: brown;
+}
+
+.button:active{
+    transform: scale(0.9);
+}
+.button-alt:active{
+    transform: scale(0.9);
+}
+.button-alt {
+    transition: all .1s;
+    cursor: pointer;
+    background-color: orangered;
+    border-radius: 15px;
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    padding: 4px;
+    width: 100px ;
+    text-align: center;
+}
