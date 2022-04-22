@@ -1,138 +1,204 @@
-
-let lastNum;
-let currentOperator = null;
-let currentNum = '';
-
-
-
-const terminal = document.querySelector('.terminal')
-const numButton = document.querySelectorAll('.button');
-const operatorButton = document.querySelectorAll('.button-alt')
-
-
-numButton.forEach(node=>node.addEventListener('click',registerInput))
-operatorButton.forEach(node=>node.addEventListener('click',registerOperator))
-
+const terminal = document.querySelector('.upper-ter')
+const terLog = document.querySelector('.lower-ter')
 
 //Basic math operations
-function add(num1,num2){  
+function add(num1, num2) {
     return num1 + num2;
 }
 
-function subtract(num1,num2){
+function subtract(num1, num2) {
     return num1 - num2;
 }
 
-function multiply(num1,num2){
+function multiply(num1, num2) {
     return num1 * num2;
 }
 
-function divide(num1,num2){
+function divide(num1, num2) {
     return num1 / num2;
 }
 
 //Do the corresponding math operation depending on the operator given
-function operate(operator,num1,num2){
-    console.log(operator,num1,num2)
-    switch(operator){
+function operate(operator, num1, num2) {
+    console.log(num1, num2)
+    switch (operator) {
         case '+':
-            return add(num1,num2);
-            break;
+            return add(num1, num2);
         case '-':
-            return subtract(num1,num2);
+            return subtract(num1, num2);
         case '/':
-            return divide(num1,num2);
+            return divide(num1, num2);
         case 'x':
-            return multiply(num1,num2); 
+            return multiply(num1, num2);
+        default:
+            return false
+            break;
     }
 }
-function clear(){
-    currentOperator ='';
-    lastNum ='';
-    currentNum ='';
-    terminal.textContent = '';
+
+//light / dark theme activation
+const themeButton = document.querySelector('.theme-toggle')
+themeButton.addEventListener('click', () => {
+    document.documentElement.classList.toggle('toggle')
+})
+
+
+const buttons = document.querySelectorAll('.button')
+buttons.forEach(button => {
+    button.addEventListener('click', identify)
+})
+
+
+
+let accNumber;
+let currentNumber = '';
+let currentOperator;
+let once = false;
+
+setInterval(format,100)
+
+function format() {
+    let s = terminal.textContent.replace(/(\d{3})/g, '$1 ').replace(/(^\s+|\s+$)/,'')
+    terminal.textContent = s
 }
 
-function registerInput(e){
-    let currentInput = this.textContent;
-    terminal.textContent += currentInput;
+function identify(e) {
+    let input;
+    if(e.target){
+        input = e.target.textContent
+    }
+    else{
+        input = e;
+    }
 
-    currentNum += currentInput;
-    if (currentInput == 'c'){
+    if(input == 'C'){
+        currentNumber = '';
+        terminal.textContent = currentNumber
+    }
+    else if(input == 'CE'){
         clear()
     }
+    else if(input == 'DEL'){
+        currentNumber = currentNumber.slice(0,currentNumber.length-1)
+        terminal.textContent = currentNumber
+    }
+    else if(input == '+/-'){
+        if(accNumber){
+            accNumber = -accNumber
+            terminal.textContent = accNumber
+            return
+        }
+        currentNumber = -currentNumber
+        terminal.textContent = currentNumber
+    }
+    else if(input == '.'){
+        decimal()
+        terminal.textContent = currentNumber
+    }
+    else if (isNaN(input)) {
+        registerOperator(input)
+    }
+    else{
+        registerNumber(input)
+    }
+}
+function registerKey(e){
+    if(!isNaN(e.key)){
+        identify(e.key)
+    }
+    switch(e.key){
+        case '+':
+        case '-':
+        case '=':
+        case '/':
+        case 'x':
+            identify(e.key)
+            break;
+        case 'c':
+        case 'C':
+            identify('CE')
+            break;
+        case 'Enter':
+            identify('=')
+        case '.':
+            identify(e.key)
+            break;
+        case 'Backspace':
+            identify('DEL')
+        default:
+            return
+    }
+}
+
+function registerNumber(num) {
+    currentNumber += num;
+    terminal.textContent = currentNumber;
 }
 
 
-function registerOperator(){
-    let currentInput = this.textContent;
-    
-    if(currentInput == '='){
-        lastNum = operate(currentOperator,lastNum,+currentNum);
-        currentNum = ''
+function registerOperator(operator) {
+    if (operator == '=') {
+        if(!operate(currentOperator, +accNumber, +currentNumber)){
+            displayError()
+            return
+        }
+        accNumber = operate(currentOperator, +accNumber, +currentNumber);
+        once = true;
         currentOperator = ''
-        terminal.textContent = lastNum.toString().includes('.')?lastNum.toFixed(2):lastNum;
-        console.log(lastNum)
+        terminal.textContent = accNumber
+        terLog.textContent = '';
     }
-    else if (currentOperator){ 
-        terminal.textContent += ` ${currentInput} `;  
-        lastNum = operate(currentOperator,lastNum,+currentNum);
-        currentOperator = currentInput;
-        currentNum = '';
-    }
-    else if (lastNum){
-        terminal.textContent += ` ${currentInput} `;  
-        currentOperator = currentInput;
-        currentNum = '';
-    }
-    else {
-        terminal.textContent += ` ${currentInput} `;  
-        currentOperator = currentInput;
-        lastNum = +currentNum;
-        currentNum = '';
-    }
-}
-function registerKeyInput(e){
-    let currentInput = e.key ;
+    else if (currentOperator) {
+        terLog.textContent += ` ${currentNumber} ${operator}`
+        accNumber = operate(currentOperator, +accNumber, +currentNumber)
 
-    if (currentInput == '-' || currentInput == '+' || currentInput == '/' || currentInput == 'x' || currentInput == '='){
-        registerKeyOperator(currentInput)
-    }
-    else if (+currentInput){
-        terminal.textContent += currentInput
-        currentNum += currentInput;
+        terminal.textContent = '';
+        currentNumber = '';
+        currentOperator = operator;
     }
     else {
-        return
-    }
-}
+        if (once) {
+            terLog.textContent += ` ${accNumber} ${operator}`
+        }
+        else {
+            terLog.textContent += ` ${currentNumber} ${operator}`
+            accNumber = currentNumber;
+        }
 
-function registerKeyOperator(key){
-    let currentInput = key;
-    
-    if(currentInput == '='){
-        lastNum = operate(currentOperator,lastNum,+currentNum);
-        currentNum = ''
-        currentOperator = ''
-        terminal.textContent = lastNum.toString().includes('.')?lastNum.toFixed(2):lastNum;
-        console.log(lastNum)
+
+        terminal.textContent = ''
+        currentNumber = ''
+        currentOperator = operator;
     }
-    else if (currentOperator){ 
-        terminal.textContent += ` ${currentInput} `;  
-        lastNum = operate(currentOperator,lastNum,+currentNum);
-        currentOperator = currentInput;
-        currentNum = '';
-    }
-    else if (lastNum){
-        terminal.textContent += ` ${currentInput} `;  
-        currentOperator = currentInput;
-        currentNum = '';
-    }
-    else {
-        terminal.textContent += ` ${currentInput} `;  
-        currentOperator = currentInput;
-        lastNum = +currentNum;
-        currentNum = '';
-    }
+    console.log(accNumber)
 }
-window.addEventListener('keypress', registerKeyInput)
+function displayError() {
+    let errorMessage = document.querySelector(".error")
+    errorMessage.addEventListener('transitionend', () => {
+        errorMessage.classList.remove('show')
+    })
+    errorMessage.classList.add('show')
+    clear()
+
+}
+function clear(){
+    terLog.textContent = ''
+    terminal.textContent = ''
+   accNumber = null;
+   currentNumber = '';
+   currentOperator = '';
+   once = false;
+}
+function decimal(){
+    let arr = currentNumber.split('')
+    if(arr.includes('.'))return 
+    else if(!currentNumber){
+        arr.push('0')
+        arr.push('.')
+    }
+    else{
+        arr.push('.')
+    }
+    currentNumber = arr.join('')
+}
+window.addEventListener('keydown', registerKey)
