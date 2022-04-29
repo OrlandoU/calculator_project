@@ -201,4 +201,7 @@ function decimal(){
     }
     currentNumber = arr.join('')
 }
+const vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--mobileHeight', `${vh}px`)
+
 window.addEventListener('keydown', registerKey)

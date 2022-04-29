@@ -1,12 +1,14 @@
 ::-webkit-scrollbar{
-    width: 10px;
+    height: 5px;
+    border: 5px solid rgba(0, 0, 0, 0) ;
 }
 ::-webkit-scrollbar-track{
     background-color: #b6b3b300;
 }
 ::-webkit-scrollbar-thumb{
-    background-color: #1d1717;
+    background-color: #433b3b;
     border-radius: 20px;
+    cursor: pointer;
 }
 :root.toggle{
     --body-color: #1e202a;
@@ -42,12 +44,20 @@ html{
 .theme-toggle,.button{
     cursor: pointer;
 }
+.button:hover{
+    background-color: rgba(128, 128, 128, 0.168);
+}
+.button:active{
+    transform: scale(0.9);
+    background-color: rgba(128, 128, 128, 0.5);
+}
 .button{
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: 100ms;
 }
 .nan{
     color: #d24c4b;
@@ -123,8 +133,9 @@ body{
     width: 100%;
     font-size: 3.3rem;
     letter-spacing: 1px;
-    overflow: auto;
+    overflow: auto hidden;
     height: 80px;
+    white-space: nowrap
 }
 .lower-ter{
     height: 50px;
@@ -150,19 +161,17 @@ body{
 }
 .calculator-body::before{
     width:90%;
-    
     height: 2px;
     content: '';
     background-color:var(--bar-color) ;
     position: absolute;
 }
 .calculator-body{
-    font-weight: ;
     position: relative;
     color: var(--body-letter-color);
     background-color: var(--body-color);
     display: grid;
-    grid-template: repeat(5,100px)/repeat(4,100px);
+    grid-template: repeat(5,minmax(70px,100px))/repeat(4,minmax(70px, 100px));
     font-size: 2.7rem;
     justify-items: center;
 }
@@ -171,11 +180,30 @@ body{
         padding: 5px;
     }
     .terminal{
-        padding: 20px;
+        padding: 15px;
+        height: fit-content;
+        flex: 1;
     }
     body,html{
-        
-        height: fit-content;
         overflow: hidden;
     }
+    .upper-ter{
+        font-size: 2.7rem;
+        height: 50px;
+    }
+    .calculator{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: space-around;
+    }
+    .lower-ter{
+        height: 20px;
+    }
+    /* .top-bar{
+        position: absolute;
+        top: 0;
+        left: 0;
+    } */
 }
